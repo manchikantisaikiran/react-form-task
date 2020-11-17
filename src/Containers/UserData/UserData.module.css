@@ -1,0 +1,27 @@
+.UserData{
+    width: 275px;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 5px 5px 5px rgba(184, 178, 178,0.6);
+}
+
+.UserData form{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+    justify-content: center; */
+}
+
+.response{
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.success{
+    color:green;
+}
+
+.danger{
+    color:red;
+}
