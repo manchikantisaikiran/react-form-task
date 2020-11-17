@@ -51,12 +51,13 @@ class UserData extends React.Component {
             },
         },
         response: '',
-        responseClass: ''
+        responseClass: '',
+        disabled: false
     }
 
     saveUser = (e) => {
         e.preventDefault()
-        this.setState({ response: '' })
+        this.setState({ response: 'fetching data...', responseClass: '', disabled: true })
         const data = {
             FirstName: this.state.formData.FirstName.value,
             LastName: this.state.formData.LastName.value,
@@ -77,9 +78,9 @@ class UserData extends React.Component {
                 'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>',
             }
         }).then(res => {
-            this.setState({ response: res.data.message, responseClass: 'success' })
+            this.setState({ response: res.data.message, responseClass: 'success', disabled: false })
         }).catch(e => {
-            this.setState({ response: 'email already exists', responseClass: 'danger' })
+            this.setState({ response: 'email already exists', responseClass: 'danger', disabled: false })
         })
     }
 
@@ -125,8 +126,8 @@ class UserData extends React.Component {
                     change={(event) => this.inputChangedHandler(event)}
                 />
                 ))}
-                {<p className={[classes.response , classes[this.state.responseClass]].join(' ')}>{status}</p>}
-                <Button click={this.saveUser}>Submit</Button>
+                {<p className={[classes.response, classes[this.state.responseClass]].join(' ')}>{status}</p>}
+                <Button disabled={this.state.disabled} click={this.saveUser}>Submit</Button>
             </form>)
 
         return (
