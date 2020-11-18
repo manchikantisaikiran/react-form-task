@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    baseURL:'http://localhost:5000/'
+    baseURL:'http://react-form-exercise.herokuapp.com/'
 })
 // react-form-exercise.herokuapp.com
 

@@ -79,7 +79,6 @@ class UserData extends React.Component {
             }
         }).then(res => {
             let errors = []
-            console.log(res, 'then')
             if (res.data.message)
                 this.setState({
                     response: [res.data.message],
@@ -90,11 +89,9 @@ class UserData extends React.Component {
                 for (let key in res.data.error) {
                     errors.push(res.data.error[key])
                 }
-                console.log(errors)
                 this.setState({ response: errors, responseClass: 'danger', disabled: false })
             }
         }).catch(e => {
-            console.log(e, 'catch')
             this.setState({ response: ['Network Issue'], disabled: false })
         })
     }
@@ -141,8 +138,8 @@ class UserData extends React.Component {
                     change={(event) => this.inputChangedHandler(event)}
                 />
                 ))}
-                {<p className={[classes.response, classes[this.state.responseClass]].join(' ')}>
-                    {status.map(item=>(<div>{item}</div>))}</p>}
+                {<div className={[classes.response, classes[this.state.responseClass]].join(' ')}>
+                    {status.map((item,i)=>(<div key={i}>{item}</div>))}</div>}
                 <Button disabled={this.state.disabled} click={this.saveUser}>Submit</Button>
             </form>)
 
