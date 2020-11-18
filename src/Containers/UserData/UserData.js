@@ -50,14 +50,14 @@ class UserData extends React.Component {
                 value: ''
             },
         },
-        response: '',
+        response: [],
         responseClass: '',
         disabled: false
     }
 
     saveUser = (e) => {
         e.preventDefault()
-        this.setState({ response: 'fetching data...', responseClass: '', disabled: true })
+        this.setState({ response: ['fetching data...'], responseClass: '', disabled: true })
         const data = {
             FirstName: this.state.formData.FirstName.value,
             LastName: this.state.formData.LastName.value,
@@ -74,13 +74,28 @@ class UserData extends React.Component {
 
         axios.post('/users/save', fd, {
             headers: {
-                "Access-Control-Allow-Origin": "http://localhost:3000",
+                "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>',
             }
         }).then(res => {
-            this.setState({ response: res.data.message, responseClass: 'success', disabled: false })
+            let errors = []
+            console.log(res, 'then')
+            if (res.data.message)
+                this.setState({
+                    response: [res.data.message],
+                    responseClass: 'success',
+                    disabled: false
+                })
+            else if (res.data.error) {
+                for (let key in res.data.error) {
+                    errors.push(res.data.error[key])
+                }
+                console.log(errors)
+                this.setState({ response: errors, responseClass: 'danger', disabled: false })
+            }
         }).catch(e => {
-            this.setState({ response: 'email already exists', responseClass: 'danger', disabled: false })
+            console.log(e, 'catch')
+            this.setState({ response: ['Network Issue'], disabled: false })
         })
     }
 
@@ -102,7 +117,7 @@ class UserData extends React.Component {
             formData[e.target.name] = updatedInput
         }
 
-        this.setState({ formData, response: '' })
+        this.setState({ formData, response: [''] })
     }
 
     render() {
@@ -126,13 +141,14 @@ class UserData extends React.Component {
                     change={(event) => this.inputChangedHandler(event)}
                 />
                 ))}
-                {<p className={[classes.response, classes[this.state.responseClass]].join(' ')}>{status}</p>}
+                {<p className={[classes.response, classes[this.state.responseClass]].join(' ')}>
+                    {status.map(item=>(<div>{item}</div>))}</p>}
                 <Button disabled={this.state.disabled} click={this.saveUser}>Submit</Button>
             </form>)
 
         return (
             <div className={classes.UserData}>
-                <h3>Tell us more about yourself</h3>
+                <h3>Tell us about yourself</h3>
                 {form}
             </div>
         )
